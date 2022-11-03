@@ -65,7 +65,7 @@ namespace OpeniT.Timesheet.Web.Controllers.Api
 				var user = this.repository.GetUserByEmail(owner);
 
 				var firstActiveUserContract = user.UserContracts.GetActiveValidFrom((DateTime)month);
-				firstActiveUserContract.Script = "Column Difference = System.RecordedHours - System.RequiredHours; Column RunningBalance = System.RecordedHours + System.PreviousMonth.ExcessHours; Column ExcessHours = System.PreviousMonth.ExcessHours + Difference; Column Test = -5 - - + ( 10 * 10); Column Test2 = ExcessHours + Difference";
+				firstActiveUserContract.Script = "Column Difference = System.RecordedHours - System.RequiredHours; Column RunningBalance = System.RecordedHours + System.PreviousMonth.ExcessHours; Column ExcessHours = System.PreviousMonth.ExcessHours + Difference; Column Test = -5 - - + ( 10 * 10); Column Test2 = ExcessHours + Difference;";
 
                 var vm = this.mapper.Map<StatisticsViewModel>(user);
 
