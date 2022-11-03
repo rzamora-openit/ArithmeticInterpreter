@@ -1,0 +1,27 @@
+@using OpeniT.Timesheet.Web.ViewModels
+
+@{
+	var user = (UserViewModel)ViewBag.UserProfile;
+}
+
+@if (user?.DisplayName != null)
+{
+	<ul class="nav navbar-nav navbar-right">
+		<li class="dropdown text-right">
+			<a href="#" class="dropdown-toggle text-right avatar-menu" data-toggle="dropdown">
+				<span>
+					@user.DisplayName
+					<small class="text-muted hidden-xs">@user.JobTitle</small>
+				</span>
+				<div class="pull-right">
+					<img class="img-circle" style="width: 48px; height: 48px;" src="../api/thumbnail/@user.Email" />
+				</div>
+			</a>
+
+			<ul class="dropdown-menu">
+				<li><a asp-action="Logout" asp-controller="Account">Logout</a></li>
+				<li><a asp-action="Contact" asp-controller="Home">Select Theme</a></li>
+			</ul>
+		</li>
+	</ul>
+}

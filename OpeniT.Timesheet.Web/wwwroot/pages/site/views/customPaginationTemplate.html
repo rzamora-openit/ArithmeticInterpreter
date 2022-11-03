@@ -1,0 +1,9 @@
+﻿<nav ng-if="numPages && pages.length >= 2">
+	<ul class="pagination">
+		<li ng-class="{'disabled': currentPage===1}"><a href="#" style="padding-left:9px;padding-right:9px;" ng-click="selectPage(1); $event.preventDefault(); $event.stopPropagation();" ng-disabled="currentPage===1">«</a></li>
+		<li ng-class="{'disabled': currentPage===1}"><a href="#" ng-click="selectPage(currentPage-1); $event.preventDefault(); $event.stopPropagation();" ng-disabled="currentPage===1">‹</a></li>
+		<li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a href="#" ng-click="selectPage(page); $event.preventDefault(); $event.stopPropagation();">{{page}}</a></li>
+		<li ng-class="{'disabled': currentPage===numPages}"><a href="#" ng-click="selectPage(currentPage+1); $event.preventDefault(); $event.stopPropagation();" ng-disabled="currentPage===numPages">›</a></li>
+		<li ng-class="{'disabled': currentPage===numPages}"><a href="#" style="padding-left:9px;padding-right:9px;" ng-click="selectPage(numPages); $event.preventDefault(); $event.stopPropagation();" ng-disabled="currentPage===numPages">»</a></li>
+	</ul>
+</nav>

@@ -1,0 +1,103 @@
+﻿<div>
+	<div class="col-xs-6">
+		<h3><i class="fa fa-calendar"></i> {{ vm.params.month }}</h3>
+	</div>
+	<div class="col-xs-6 text-right">
+		<div class="input-group pull-right" style="width: 130px; margin-top: 15px;">
+			<span class="input-group-addon">
+				<i class="fa fa-calendar"></i>
+			</span>
+			<select class="form-control input-sm" data-width="auto" ng-init="vm.selectedMonth = vm.params.month" ng-model="vm.selectedMonth" ng-options="month for month in vm.months"></select>
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+	<div class="col-xs-6">
+		<a href back-button>Back</a>
+	</div>
+	<div class="col-xs-6 text-right">
+		<a ng-href="#!/year/{{ vm.model.email }}?year={{ vm.params.month | limitTo: 4 }}">Yearly Summary</a>
+	</div>
+	<div class="clearfix"></div>
+	<div class="col-lg-12">
+		<div class="panel panel-default panel-no-margin">
+			<div class="panel-body">
+				<div class="col-xs-6">
+					<dl class="dl-horizontal">
+						<dt>Employee Name:</dt>
+						<dd>{{ vm.model.displayName }}</dd>
+						<dt>Legal Entity:</dt>
+						<dd>{{ vm.model.userLocationName }}</dd>
+						<dt>Line Manager:</dt>
+						<dd>{{ vm.model.lineManagerDisplayName }}</dd>
+					</dl>
+				</div>
+				<div class="col-xs-6">
+					<dl class="dl-horizontal pull-right">
+						<dt>Required Hours:</dt>
+						<dd>{{ vm.model.workingHours | number: 2 }} <small ng-show="vm.model.workingHours">Hours</small></dd>
+						<dt>Recorded Hours:</dt>
+						<dd>{{ vm.model.recordedHours | number: 2 }} <small ng-show="vm.model.recordedHours">Hours</small></dd>
+						<dt>Excess Hours:</dt>
+						<dd>{{ vm.model.excessHours | number: 2 }} <small ng-show="vm.model.excessHours">Hours</small></dd>
+					</dl>
+					<dl class="dl-horizontal pull-right">
+						<dt ng-if="vm.model.userTypeStatus !== 'Probation'">Remaining <abbr title="Vacation Leave">VL:</abbr></dt>
+						<dd ng-if="vm.model.userTypeStatus !== 'Probation'">{{ vm.model.remainingVL | number: 2 }} <small ng-show="vm.model.remainingVL">{{ (vm.model.remainingVL > 1) ? "Hours" : "Hour" }}</small></dd>
+						<dt ng-if="vm.model.userLocationCode === 'co-ph' && vm.model.userTypeStatus !== 'Probation'">Remaining SL:</dt>
+						<dd ng-if="vm.model.userLocationCode === 'co-ph' && vm.model.userTypeStatus !== 'Probation'">{{ vm.model.remainingSL | number: 2 }} <small ng-show=" vm.model.remainingSL">Hours</small></dd>
+					</dl>
+				</div>
+				
+				<div class="clearfix"></div>
+				<div id="pivotTable"></div>
+			</div>
+		</div>
+		<div class="small pull-left text-muted"><p><em>Drilldown :: Click on the hours for more details...</em></p></div>
+		<elapsed-time ng-show="vm.model.elapsed"></elapsed-time>
+		<div class="table-responsive" ng-if="vm.records.length > 0">
+			<table class="table table-hover table-condensed">
+				<thead>
+				<tr>
+					<th colspan="9">
+						<span>{{ vm.drillDownDate }}</span>
+						<span ng-if="vm.drillDownDate && vm.drillDownProcess"><small><i class="fa fa-unlink"></i> </small></span>
+						<span ng-if="vm.drillDownProcess">{{ vm.drillDownProcess }}</span>
+						<span ng-if="vm.drillDownSubProcess"><small><i class="fa fa-unlink"></i> </small></span>
+						<span ng-if="vm.drillDownSubProcess">{{ vm.drillDownSubProcess }}</span>
+						<span ng-if="vm.drillDownTaskGroup"><small><i class="fa fa-unlink"></i> </small></span>
+						<span ng-if="vm.drillDownTaskGroup">{{ vm.drillDownTaskGroup }}</span>
+						<span ng-if="vm.drillDownTask"><small><i class="fa fa-unlink"></i> </small></span>
+						<span ng-if="vm.drillDownTask">{{ vm.drillDownTask }}</span>
+					</th>
+				</tr>
+				<tr>
+					<th>PID</th>
+					<th>SPID</th>
+					<th>Process</th>
+					<th>Subprocess</th>
+					<th>Task Group</th>
+					<th>Task</th>
+					<th>Subtask</th>
+					<th>Hours</th>
+					<th>Work Details</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="record in vm.records">
+					<td>{{ record["PID"] }}</td>
+					<td>{{ record["SPID"] }}</td>
+					<td>{{ record["Process"] }}</td>
+					<td>{{ record["Subprocess"] }}</td>
+					<td>{{ record["Task Group"] }}</td>
+					<td auto-linker auto-linker-tags="vm.uriTags" auto-linker-hashtag="{{ record['uriTag'] }}">{{ record["Task"] }}</td>
+					<td auto-linker auto-linker-tags="vm.uriTags" auto-linker-hashtag="{{ record['uriTag'] }}">{{ record["Subtask"] }}</td>
+					<td>{{ record["Hours"] | number: 2 }}</td>
+					<td auto-linker auto-linker-tags="vm.uriTags" auto-linker-hashtag="{{ record['uriTag'] }}">{{ record["Description"] }}</td>
+				</tr>
+				</tbody>
+			</table>
+			<br />
+		</div>
+	</div>
+</div>

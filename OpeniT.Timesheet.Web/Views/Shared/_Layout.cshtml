@@ -1,0 +1,109 @@
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=11">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open iT Timesheet :: @ViewData["Title"]</title>
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="~/lib/angular-ui-notification/dist/angular-ui-notification.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/angular-ui-notification/dist/angular-ui-notification.min.css" asp-append-version="true" />
+        <link href="~/lib/highcharts-ng/dist/highcharts-ng.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @Html.Raw(JavaScriptSnippet.FullScript)
+    <link href="~/lib/angular-ui-notification/dist/angular-ui-notification.min.css" rel="stylesheet" />
+    @RenderSection("Styles", false)
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" id="topnav" >
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">#TimesheetJS</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+					<li><a asp-area="" asp-controller="Statistics" asp-action="Index">Statistics</a></li>					
+				</ul>
+				@*@if (User.IsInRole("Administrator"))
+					{
+						<ul class="nav navbar-nav">
+							<li class="dropdown">
+								<a href="#" data-toggle="dropdown">Administration <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a asp-area="" asp-controller="Processes" asp-action="Index">Processes</a></li>
+								</ul>
+							</li>
+						</ul>
+					}*@
+				<partial name="_Avatar" />
+				<partial name="_PushNotification" />
+			</div>
+		</div>
+	</nav>
+	<partial name="_Notification" />
+	<div class="body-content">
+		@RenderBody()
+	</div>
+	<footer class="navbar navbar-inverse navbar-fixed-bottom">
+		<br />
+		<p class="text-center">Powered by Open iT, Inc. &copy; 2017@(DateTime.Now.Year > 2017 ? "-" + @DateTime.Now.Year : "") Romeo Salayo Jr.</p>
+	</footer>
+
+	<environment names="Development">
+		<script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.js" asp-append-version="true"></script>
+		<script src="~/lib/moment/moment.js" asp-append-version="true"></script>
+		<script src="~/pages/site/js/time-log.js" asp-append-version="true"></script>
+		<script src="~/lib/aspnet-signalr/signalr.min.js" asp-append-version="true"></script>
+		<script src="~/lib/angular/angular.min.js" asp-append-version="true"></script>
+		<script src="~/lib/angular-sanitize/angular-sanitize.min.js" asp-append-version="true"></script>
+		<script src="~/pages/site/js/simpleControls.js" asp-append-version="true"></script>
+		<script src="~/pages/site/js/site.js" asp-append-version="true"></script>
+	</environment>
+	<environment names="Staging,Production">
+		<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+		<script src="~/lib/moment/min/moment.min.js" asp-append-version="true"></script>
+		<script src="~/pages/site/js/time-log.min.js" asp-append-version="true"></script>
+		<script src="~/lib/aspnet-signalr/signalr.min.js" asp-append-version="true"></script>
+		<script src="~/lib/angular/angular.min.js" asp-append-version="true"></script>
+		<script src="~/lib/angular-sanitize/angular-sanitize.min.js" asp-append-version="true"></script>
+		<script src="~/pages/site/js/simpleControls.js" asp-append-version="true"></script>
+		<script src="~/pages/site/js/site.js" asp-append-version="true"></script>
+	</environment>
+
+	@RenderSection("Scripts", required: false)
+	<environment names="Development">
+		<script src="~/pages/pushNotification/js/app-pushnotification.js" asp-append-version="true"></script>
+		<script src="~/pages/notification/js/notificationDirectives.js" asp-append-version="true"></script>
+		<script src="~/pages/pushNotification/js/pushNotificationDirectives.js" asp-append-version="true"></script>
+		<script src="~/pages/pushNotification/js/pushNotificationController.js" asp-append-version="true"></script>
+	</environment>
+	<environment names="Staging,Production">
+		<script src="~/pages/pushNotification/js/app-pushnotification.js" asp-append-version="true"></script>
+		<script src="~/pages/notification/js/notificationDirectives.js" asp-append-version="true"></script>
+		<script src="~/pages/pushNotification/js/pushNotificationDirectives.js" asp-append-version="true"></script>
+		<script src="~/pages/pushNotification/js/pushNotificationController.js" asp-append-version="true"></script>
+	</environment>
+</body>
+</html>

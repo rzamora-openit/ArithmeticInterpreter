@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Statistics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link href="~/lib/pivottable/dist/pivot.min.css" rel="stylesheet" />
+    <link href="~/lib/nrecopivottableext/nrecopivottableext.css" rel="stylesheet" />
+    <link href="~/lib/angular-bootstrap-toggle/dist/angular-bootstrap-toggle.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/lib/angular-route/angular-route.min.js" asp-append-version="true"></script>
+    <script src="~/lib/angular-bootstrap/ui-bootstrap-tpls.js" asp-append-version="true"></script>
+    <script src="~/lib/angular-filter/dist/angular-filter.min.js" asp-append-version="true"></script>
+    <script src="~/lib/angular-smart-table/dist/smart-table.min.js" asp-append-version="true"></script>
+    <script src="~/lib/angular-bootstrap-toggle/dist/angular-bootstrap-toggle.min.js" asp-append-version="true"></script>
+    <script src="~/lib/pivottable/dist/pivot.min.js" asp-append-version="true"></script>
+    <script src="~/lib/nrecopivottableext/nrecopivottableext.js" asp-append-version="true"></script>
+    <script src="~/lib/angular-ui-notification/dist/angular-ui-notification.min.js" asp-append-version="true"></script>
+    <script src="~/pages/statistics/js/app-statistics.js" asp-append-version="true"></script>
+    <script src="~/pages/statistics/js/statisticsController.js" asp-append-version="true"></script>
+    <script src="~/pages/statistics/js/statisticsMonthController.js" asp-append-version="true"></script>
+    <script src="~/pages/statistics/js/statisticsYearController.js" asp-append-version="true"></script>
+    <script src="~/pages/site/js/confirmDialogComponent.js" asp-append-version="true"></script>
+}
+
+<div class="row container-fluid" ng-app="app-statistics">
+
+    <div ng-view></div>
+
+</div>

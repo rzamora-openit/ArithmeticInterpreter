@@ -1,0 +1,23 @@
+﻿@{
+	ViewData["Title"] = "Dashboard";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Scripts {
+	<script src="https://c64.assets-yammer.com/assets/platform_embed.js" asp-append-version="true"></script>
+	<script src="~/lib/angular-route/angular-route.min.js" asp-append-version="true"></script>
+	<script src="~/lib/angular-filter/dist/angular-filter.min.js" asp-append-version="true"></script>
+	<script src="~/lib/angular-bootstrap/ui-bootstrap-tpls.js" asp-append-version="true"></script>
+	<script src="~/lib/highcharts/highcharts.js" asp-append-version="true"></script>
+	<script src="~/lib/highcharts/highcharts-more.js" asp-append-version="true"></script>
+	<script src="~/lib/highcharts/modules/exporting.js" asp-append-version="true"></script>
+	<script src="~/lib/highcharts/modules/no-data-to-display.js" asp-append-version="true"></script>
+	<script src="~/lib/highcharts-ng/dist/highcharts-ng.min.js" asp-append-version="true"></script>
+	<script src="~/pages/dashboard/js/app-dashboard.js" asp-append-version="true"></script>
+	<script src="~/pages/dashboard/js/dashboardController.js" asp-append-version="true"></script>
+}
+
+<div class="row container-fluid" ng-app="app-dashboard">
+
+	<div ng-view></div>
+
+</div>

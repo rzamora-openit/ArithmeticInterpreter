@@ -1,0 +1,16 @@
+﻿<div class="modal-header">
+	<h4 class="modal-title" id="modal-title"><i class="fa fa-exclamation-triangle"></i> {{ $ctrl.dialog.title }}</h4>
+</div>
+<div class="modal-body" id="modal-body">
+	<p ng-if="!$ctrl.dialog.htmlMessage">{{ $ctrl.dialog.message }}</p>
+	<p ng-if="$ctrl.dialog.htmlMessage" ng-bind-html="$ctrl.dialog.message | trustAsHtml"></p>
+	<textarea rows="3" class="form-control" placeholder="{{$ctrl.dialog.placeholder}}" id="note" name="note" ng-model="$ctrl.dialog.input" autocomplete="off" ng-if="$ctrl.dialog.textDialog" />
+	<div ng-if="$ctrl.dialog.checkbox">
+		<input type="checkbox" ng-model="$ctrl.dialog.checkboxInput" ng-change="$ctrl.truncateELSelection()" id="checkbox">
+		<label for="checkbox" style="padding: 0; margin: 0;">{{$ctrl.dialog.checkboxText}}</label>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-default" type="button" ng-click="$ctrl.cancel()">{{ $ctrl.dialog.cancel }}</button>
+	<button class="btn btn-{{$ctrl.dialog.confirmClass ? $ctrl.dialog.confirmClass : 'danger'}}" type="button" ng-click="$ctrl.confirm()" ng-disabled="$ctrl.dialog.textDialog && !$ctrl.dialog.input">{{ $ctrl.dialog.confirm }}</button>
+</div>

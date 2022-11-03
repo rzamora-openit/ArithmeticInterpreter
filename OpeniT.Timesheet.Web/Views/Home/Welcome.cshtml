@@ -1,0 +1,98 @@
+﻿@model OpeniT.Timesheet.Web.ViewModels.UserLocationViewModel
+@{
+	ViewData["Title"] = "Welcome";
+}
+
+@section scripts {
+	<script src="~/lib/angular-filter/dist/angular-filter.min.js" asp-append-version="true"></script>
+	<script src="~/lib/bootstrap-filestyle/src/bootstrap-filestyle.min.js"></script>
+}
+
+<div class="page-header">
+	<h1>Welcome! <small>@ViewData["GivenName"]</small>,</h1>
+</div>
+
+<div class="jumbotron">
+	<div class="col-lg-6">
+		<h1>First time?</h1>
+		<p>No worries... There's always first time for everything.</p>
+		<p>For easy guide on using this tool, we've prepared a simple <a href="/images/timesheet-process.png" onclick="window.open('/images/timesheet-process.jpg','popup','width=540,height=900'); return false;">infographic</a>.</p>
+	</div>
+	<div class="col-lg-6">
+		<p>This web app demonstrate the use of the following frameworks and web components to build an awesome application using C# and JavaScript (C<mark>#TimesheetJS</mark>):</p>
+		<ul>
+			<li><a href="https://github.com/aspnet/Home" target="blank">Microsoft ASP.NET Core v2.1</a></li>
+			<li><a href="https://github.com/aspnet/Mvc" target="blank">Microsoft ASP.NET Core MVC v2.1</a></li>
+			<li><a href="https://github.com/aspnet/EntityFramework" target="blank">Microsoft EntityFramework Core v2.1</a></li>
+			<li><a href="https://github.com/AutoMapper/AutoMapper" target="blank">AutoMapper v6.2.2</a></li>
+			<li><a href="https://github.com/VahidN/EPPlus.Core" target="blank">EPPlus.Core v1.5.4</a></li>
+			<li><a href="https://github.com/HangfireIO/Hangfire" target="blank">Hangfire v1.6.19</a></li>
+			<li><a href="https://angularjs.org/" target="blank">Angular v1.6.10</a></li>
+			<li><a href="https://angular-ui.github.io/bootstrap/" target="blank">Angular-Bootstrap v2.5.0</a></li>
+			<li><a href="http://getbootstrap.com/" target="blank">Bootstrap v3.3.7</a></li>
+			<li><a href="https://highcharts.com" target="blank">Highcharts v6.1.0</a></li>
+			<li><a href="https://github.com/nicolaskruchten/pivottable" target="blank">PivotTable.js v2.20.0</a></li>
+			<li>and more...</li>
+		</ul>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div class="row">
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-body" style="height: 120px;">
+				<div class="form-group">
+					<label>We only need your Legal Entity for now.</label>
+					<form method="post">
+						<div class="col-lg-4 col-md-6 col-sm-6 col-xs-8">
+							<select class="form-control" asp-for="LocationId" asp-items="@Model.UserLocations">
+								<option>Select Legal Entity</option>
+							</select>
+							@if (TempData["Ready"] != null)
+							{
+								<p><i class="fa fa-check"></i> Congratulations! You're all set.</p>
+							}
+						</div>
+						<div class="col-lg-8 col-md-6 col-sm-6 col-xs-4">
+							<input type="submit" class="btn btn-primary" value="Done" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-body" style="height: 120px;">
+				<label>You can use this to import your existing excel timesheet.</label>
+				<form asp-action="Index" asp-controller="Import" method="post" enctype="multipart/form-data">
+					<div class="col-lg-4 col-md-6 col-sm-6 col-xs-8">
+						<div class="input-group">
+							<input type="file" class="filestyle" name="files" multiple data-buttonBefore="true" />
+							@if (TempData["Results"] != null)
+							{
+								<p><i class="fa fa-check"></i> Successfully imported @TempData["Results"] rows.</p>
+							}
+						</div>
+					</div>
+					<div class="col-lg-8 col-md-6 col-sm-6 col-xs-4">
+						<input type="submit" class="btn btn-info pull-left" value="Upload" />
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<br />
+<br />
+@if (TempData["Ready"] != null)
+{
+	<div class="row">
+		<div class="col-lg-3 col-md-5 col-sm-6 col-xs-12 center-block">
+			<a class="btn btn-lg btn-block btn-success" asp-controller="Home" asp-action="Index">I'm Ready</a>
+		</div>
+	</div>
+}

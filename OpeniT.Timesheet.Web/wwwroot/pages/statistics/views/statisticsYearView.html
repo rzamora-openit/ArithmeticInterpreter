@@ -1,0 +1,51 @@
+﻿<div>
+	<div class="col-lg-12">
+		<h3><i class="fa fa-calendar"></i> Summary of {{ vm.year }}</h3>
+	</div>
+
+	<div class="clearfix"></div>
+	<div class="col-xs-12">
+		<a href back-button>Back</a>
+	</div>
+	<div class="clearfix"></div>
+	
+	<div class="col-lg-12">
+		<div class="panel panel-default panel-no-margin">
+			<div class="panel-body">
+				<div class="col-xs-6">
+					<dl class="dl-horizontal">
+						<dt>Employee Name:</dt>
+						<dd>{{ vm.model.displayName }}</dd>
+						<dt>Legal Entity:</dt>
+						<dd>{{ vm.model.userLocationName }}</dd>
+						<dt>Line Manager:</dt>
+						<dd>{{ vm.model.lineManagerDisplayName }}</dd>
+					</dl>
+				</div>
+				<div class="col-xs-6">
+					<dl class="dl-horizontal pull-right">
+						<dt>Total Required Hours:</dt>
+						<dd>{{ vm.model.workingHours | number: 2 }} <small ng-show="vm.model.workingHours">Hours</small></dd>
+						<dt>Total Recorded Hours:</dt>
+						<dd>{{ vm.model.recordedHours | number: 2 }} <small ng-show="vm.model.recordedHours">Hours</small></dd>
+						<dt>Excess Hours:</dt>
+						<dd>{{ vm.model.excessHours | number: 2 }} <small ng-show="vm.model.excessHours">Hours</small></dd>
+					</dl>
+					<dl class="dl-horizontal pull-right">
+						<dt ng-if="vm.model.userTypeStatus !== 'Probation'">Remaining <abbr title="Vacation Leave">VL:</abbr></dt>
+						<dd ng-if="vm.model.userTypeStatus !== 'Probation'">{{ vm.model.remainingVL | number: 2 }} <small ng-show="vm.model.remainingVL">{{ (vm.model.remainingVL > 1) ? "Hours" : "Hour" }}</small></dd>
+						<dt ng-if="vm.model.userLocationCode === 'co-ph' && vm.model.userTypeStatus !== 'Probation'">Remaining SL:</dt>
+						<dd ng-if="vm.model.userLocationCode === 'co-ph' && vm.model.userTypeStatus !== 'Probation'">{{ vm.model.remainingSL | number: 2 }} <small ng-show=" vm.model.remainingSL">Hours</small></dd>
+					</dl>
+				</div>
+				
+				<div class="clearfix"></div>
+				<div id="pivotTable"></div>
+			</div>
+		</div>
+		<elapsed-time ng-show="vm.model.elapsed"></elapsed-time>
+	</div>
+	<div class="clearfix"></div>
+	<br />
+	<br />
+</div>

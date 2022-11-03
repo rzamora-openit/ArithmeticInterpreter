@@ -1,0 +1,9 @@
+﻿<div class="modal-header">
+	<h4 class="modal-title" id="modal-title"><i class="fa fa-exclamation-triangle"></i> {{ $ctrl.dialog.title }}</h4>
+</div>
+<div class="modal-body" id="modal-body">
+	<p style="white-space: pre-wrap;">{{ $ctrl.dialog.message }}</p>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-default" type="button" ng-click="$ctrl.close()">{{$ctrl.dialog.close}}</button>
+</div>

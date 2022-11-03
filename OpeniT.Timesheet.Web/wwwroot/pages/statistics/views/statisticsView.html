@@ -1,0 +1,206 @@
+﻿<div>
+	<div class="col-md-6 col-xs-12">
+		<h3><i class="fa fa-bar-chart"></i> Statistics <small>{{ vm.selectedYear }}</small></h3>
+	</div>
+	<div class="col-md-6 col-xs-12 text-right">
+		<div class="input-group pull-right" style="width: 120px; margin-top: 15px;">
+			<span class="input-group-addon">
+				<i class="fa fa-calendar"></i>
+			</span>
+			<select class="form-control input-sm" data-width="auto" ng-model="vm.selectedYear" ng-change="vm.getStatistics(vm.model.email, vm.selectedYear + '-12')" ng-options="year for year in vm.model.distinctYears | orderBy : '-'"></select>
+		</div>
+	</div>
+	<div class="col-xs-12">
+
+		<!--Loading-->
+		<div class="panel panel-default" ng-if="vm.loading">
+			<div style="padding: 20px;">
+				<h5><i class="fa fa-circle-o-notch fa-spin"></i> Loading...</h5>
+			</div>
+		</div>
+
+		<div class="panel panel-default panel-no-margin" ng-if="!vm.loading">
+			<div class="panel-body">
+				<div class="col-xs-6">
+					<dl class="dl-horizontal">
+						<dt>Employee Name:</dt>
+						<dd>{{ vm.model.displayName }}</dd>
+						<dt>Legal Entity:</dt>
+						<dd>{{ vm.model.userLocationName }}</dd>
+						<dt>Line Manager:</dt>
+						<dd>{{ vm.model.lineManagerDisplayName }}</dd>
+					</dl>
+				</div>
+				<div class="col-xs-6">
+					<dl class="dl-horizontal dl-horizontal-md pull-right">
+						<dt ng-repeat="excess in vm.excessHours" ng-if="$last" ng-show="excess">Excess Hours Last Year:</dt>
+						<dd ng-repeat="excess in vm.excessHours" ng-if="$last">{{ excess.hours | number: 2 }} <small ng-show="excess">Hours</small></dd>
+						<dt>Remaining <abbr title="Time Off">TO:</abbr></dt>
+						<dd>{{ vm.model.remainingTO }} <small ng-show="vm.model.remainingTO">{{ (vm.model.remainingTO > 1) ? "Days" : "Day" }}</small></dd>
+					</dl>
+					<dl class="dl-horizontal dl-horizontal-md pull-right">
+						<dt ng-if="vm.model.userTypeStatus !== 'Probation'">Remaining <abbr title="Vacation Leave">VL:</abbr></dt>
+						<dd ng-if="vm.model.userTypeStatus !== 'Probation'">{{ vm.model.remainingVL | number: 2 }} <small ng-show="vm.model.remainingVL">{{ (vm.model.remainingVL > 1) ? "Hours" : "Hour" }}</small></dd>
+						<dt ng-if="vm.model.userLocationCode === 'co-ph' && vm.model.userTypeStatus !== 'Probation'">Remaining <abbr title="Sick Leave">SL:</abbr></dt>
+						<dd ng-if="vm.model.userLocationCode === 'co-ph' && vm.model.userTypeStatus !== 'Probation'">{{ vm.model.remainingSL | number: 2 }} <small ng-show="vm.model.remainingSL">{{ (vm.model.remainingSL > 1) ? "Hours" : "Hour" }}</small></dd>
+					</dl>
+				</div>
+
+				<div class="pull-right" style="margin-bottom: 8px;">
+					<div class="btn-group" style="vertical-align: top;">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Actions <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-right">
+							<li><a href="#" ng-href="/Requests/CarryoverVL#!/?owner={{ vm.model.email }}">Request to Carryover VL</a></li>
+							<li><a href="#" ng-href="/Requests/Leave#!/?owner={{ vm.model.email }}">Request for Leave</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="clearfix"></div>
+				<div class="table-responsive">
+					<table class="table table-hover table-condensed">
+						<thead>
+							<tr style="border-top: 1px solid #ddd;">
+								<th>Month</th> 
+								<th class="text-right">Recorded Hours</th>
+								<th class="text-right">Required Hours</th>
+								<th class="text-right" ng-repeat="column in vm.model.statisticsColumnRecords[0].statisticsColumns">{{column.name}}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody >
+							<tr ng-if="vm.model.statisticsColumnRecords.length === 0">
+								<td colspan="100%" style="text-align: center; font-weight: bold;">No data to display</td>
+							</tr>
+							<tr ng-repeat="record in vm.model.statisticsColumnRecords">
+								<td><a ng-href="#!/month/{{ vm.model.email }}?month={{ record.month | date: 'yyyy-MM' }}">{{ record.month | date: "yyyy - MMMM" }}</a></td>
+								<td class="text-right col-statistics">{{record.hours | number: 2}}</td>
+								<td class="text-right col-statistics">{{record.requiredHours | number: 2}}</td>
+								<td class="text-right col-statistics" ng-repeat="column in record.statisticsColumns">{{column.value | number: 2}}</td>  
+
+								<td class="text-right" style="display: block;">
+									<button type="submit" class="btn btn-xs btn-success" ng-click="vm.submit(data)" ng-if="!data.submittedOn" ng-disabled="vm.isBusy || !vm.isSubmitAllowed(data.month)">Submit</button>
+									<button type="submit" class="btn btn-xs btn-warning" ng-click="vm.recalculate(data)" ng-if="(vm.selectedYear == vm.currentDate.getFullYear()) && data.submittedOn && !vm.isHR" ng-disabled="vm.isBusy || !vm.isSubmitAllowed(data.month)">Recalc</button>
+									<button type="submit" class="btn btn-xs btn-warning" ng-if="(vm.selectedYear != vm.currentDate.getFullYear()) && data.submittedOn && !vm.isHR" ng-disabled="true">Locked</button>
+									<button type="submit" class="btn btn-xs btn-warning" ng-click="vm.unlock(data)" ng-if="data.submittedOn && vm.isHR" ng-disabled="vm.isBusy || !vm.isSubmitAllowed(data.month)">Unlock</button>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr ng-show="vm.model.elapsed" ng-if="vm.selectedYear">
+								<td colspan="{{ 7 - (vm.selectedYear >= 2022 && vm.model.userLocationCode == 'co-ph' ? 0 : 1) - (vm.model.userLocationCode == 'co-ph' || vm.model.userLocationCode == 'co-in' ? 0 : 1)}}">
+									<a href ng-href="#!/year/{{ vm.model.email }}?year={{ vm.selectedYear }}">{{ vm.selectedYear }} - Summary</a>
+								</td>
+								<td colspan="2" class="text-right">
+									<span ng-show="vm.isHR && vm.selectedYear < vm.currentDate.getFullYear()">Carry over VL <toggle ng-model="vm.excessVL" ng-change="vm.toggleExcessVL(vm.selectedYear)" on="True" off="False" size="btn-xs"></toggle></span>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+
+
+					<table class="table table-hover table-condensed">
+						<thead>
+							<tr style="border-top: 1px solid #ddd;">
+								<th class="text-right" ng-repeat="data in vm.model.statisticsColumns">{{data.name}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="text-right col-statistics" ng-repeat="data in vm.model.statisticsColumns">{{data.value}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<elapsed-time ng-if="!vm.loading"></elapsed-time>
+	</div>
+
+	<div class="col-sm-12 hidden-xs" style="margin-bottom: 40px;" ng-if="!vm.isHR && !vm.loading">
+		<div class="panel panel-default panel-no-margin" ng-if="!vm.loading">
+			<div class="panel-body">
+				<div class="clearfix"></div>
+				<div class="panel-body" style="padding: 0px;" st-table="users" st-safe-src="vm.usersTable">
+					<div class="row" style="margin: 0;">
+						<div class="col-md-4 col-xs-12" style="padding-left: 0; padding-right: 0; margin-bottom: 5px; display: flex; align-items: center;">
+							<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 8px;">
+								Filter <span class="caret"></span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-left" ng-click="$event.stopPropagation()" style="width: 350px; max-width: 80vw; padding: 0; margin-bottom: 50px;">
+								<div class="col-xs-12" style="display: flex; align-items: center; justify-content: space-between;">
+									<h4 style="font-weight: bold; margin: 12px 0;">Filter by:</h4>
+									<button class="btn btn-sm btn-default" style="margin: 12px 0;" ng-click="vm.clearFilters();">Clear All</button>
+								</div>
+								<div uib-accordion auto-uncollapse-mobile close-others="false" class="panel-group-no-margin" style="margin-top: 50px;">
+									<div uib-accordion-group class="panel-body-no-padding" style="padding-left: 0; padding-right: 0; border-radius: 0; margin-bottom: -5px; margin-top: 10px; border: 1px solid #ddd;" heading="Type">
+										<div class="row" style="padding: 0; margin: 0;">
+											<div class="col-md-6 col-xs-12">
+												<div class="checkbox" style="margin: 4px 0;">
+													<label>
+														<input type="checkbox" ng-click="vm.showAll = !vm.showAll; vm.filterOnChange();" ng-checked="vm.showAll" />
+														All
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group has-feedback" style="margin: 0; width: 100%;">
+								<input id="stSearch" type="search" class="form-control" placeholder="Search" ng-model="vm.filterText" st-search>
+								<span class="form-control-clear form-control-feedback" ng-class="{hidden: !vm.filterText}" st-reset-search="displayName" ng-click="vm.filterText = ''" style="font-size: 24px; color: #aaa;">&times;</span>
+							</div>
+						</div>
+						<div class="col-md-8 col-xs-12" style="padding-left: 0; padding-right: 0; margin-bottom: 12px; display: inline-table; text-align: right;">
+							<div style="display: inline-block;" st-pagination st-items-by-page="vm.itemsPerPage" st-template="../pages/site/views/customPaginationTemplate.html"></div>
+							<div style="display: inline-block; margin-left: 5px;">
+								<div class="input-group">
+									<span class="input-group-addon" style="background-color:white;" id="item-per-page">Items per page</span>
+									<input type="number" id="pageItemInput" class="form-control" aria-describedby="item-per-page" ng-init="vm.itemsPerPage = 20" ng-model="vm.itemsPerPage" min="0" max="100" limit-input>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="table-responsive">
+						<table class="table table-hover table-condensed">
+							<thead>
+								<tr>
+									<th class="sortable" st-sort="displayName">Name</th>
+									<th class="sortable hidden-sm" st-sort="code" style="width: 50px;">CODE</th>
+									<th class="sortable hidden-md hidden-sm" st-sort="jobTitle">Title</th>
+									<th class="sortable" st-sort="manager">Line Manager</th>
+									<th class="sortable" st-sort="lastLogin">Last Login</th>
+									<th class="sortable" st-sort="lastUpdate">Last Update</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-if="users.length === 0">
+									<td colspan="100%" style="font-weight: bold; text-align: center">No data to display</td>
+								</tr>
+								<tr ng-repeat="user in users">
+									<td><a href ng-href="#!/month/{{ user.email }}?month={{ vm.currentDate | date: 'yyyy-MM' }}" target="blank">{{ user.displayName }}</a></td>
+									<td class="hidden-sm">{{ user.code }}</td>
+									<td class="hidden-md hidden-sm">{{ user.jobTitle }}</td>
+									<td>{{ user.manager }}</td>
+									<td>{{ user.lastLogin | date: "medium" }}</td>
+									<td>{{ user.lastUpdate | date: "medium" }}</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="100%">
+										<smart-table-current-page></smart-table-current-page>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p class="small text-muted text-right" ng-if="!vm.loading" ng-show="vm.usersElapsed">{{ vm.usersElapsed | number: 3 }} seconds</p>
+	</div>
+</div>

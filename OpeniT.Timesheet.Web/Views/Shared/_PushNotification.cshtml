@@ -1,0 +1,42 @@
+<ul class="nav navbar-nav navbar-right" style="margin:0px;margin-right:5px;" ng-controller="pushnotificationController" id="notification-container">
+	<li class="dropdown" style="margin:0px;display:none" ng-style="{'display':notifications.length ? 'block':'none'}">
+		<a style="padding:0px;" role="button" data-toggle="dropdown" ng-click="setNotified()">
+			<i class="fa fa-bell" style="height:50px;padding:9px;font-size:30px;" ng-style="{'color': notNotifiedCount > 0 ? 'rgb(255, 255, 255)': ''}"></i>
+			<span class="badge badge-danger" ng-if="needsResolutionCount" style="position:absolute;top:4px;left:26px;font-size:9px;" ng-bind="needsResolutionCount"></span>
+		</a>
+		<ul class="dropdown-menu" style="width:500px;padding:0px;">
+			<li class="dropdown-item" style="padding:0px;">
+				<ul class="list-group" style="padding:0px;margin:0px;max-height: 60vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+					<li class="list-group-item pushnotif-li"
+						style="padding: 0px;margin: 0px;"
+						ng-repeat="notification in notifications | filter: {forResolution:true} | orderBy: ['seen','-dateIssued']"
+						ng-if="!(notification.seen && notification.daysAge > 1)"
+						ng-click="setAssumedSeen(notification.id)">
+						<a style="padding:0px;text-decoration:none;" ng-if="notification.originType === 'Deviation Report'" href="" ng-click="navigateTo(notification.redirectURL)" notif-deviation-report></a>
+						<a style="padding:0px;text-decoration:none;" ng-if="notification.originType === 'Deviation Activity'" href="" ng-click="navigateTo(notification.redirectURL)" notif-deviation-activity></a>
+					</li>
+					<li class="pushnotif-li" ng-if="needsResolutionCount" style="height:15px;"></li>
+					<li class="list-group-item pushnotif-li"
+						style="padding: 0px;margin: 0px;"
+						ng-repeat="notification in notifications | filter: {forResolution:'!'+true}  |orderBy: ['seen','-dateIssued']"
+						ng-if="!(notification.seen && notification.daysAge > 1)"
+						ng-click="setAssumedSeen(notification.id)">
+						<a style="padding:0px;text-decoration:none;" ng-if="notification.originType === 'Deviation Report'" href="" ng-click="navigateTo(notification.redirectURL)" notif-deviation-report></a>
+						<a style="padding:0px;text-decoration:none;" ng-if="notification.originType === 'Deviation Activity'" href="" ng-click="navigateTo(notification.redirectURL)" notif-deviation-activity></a>
+						<a style="padding:0px;text-decoration:none;" ng-if="notification.originType === 'OKR'" href="" ng-click="okrNavigation()" notif-okr></a>
+						<a style="padding:0px;text-decoration:none;" ng-if="notification.originType === 'KR'" href="" ng-click="okrNavigation()" notif-okr></a>
+					</li>
+
+				</ul>
+			</li>
+			<li role="separator" class="divider" style="margin:1px;"></li>
+			<li class="dropdown-item" style="height:30px; padding:0px;">
+				<a style="padding:0px;" href="../Requests/Notification#!/">
+					<div style="width:100%;padding:0px;padding-top:4px;padding-right:20px;text-align:center;">
+						View all
+					</div>
+				</a>
+			</li>
+		</ul>
+	</li>
+</ul>

@@ -1,0 +1,24 @@
+@if (ViewBag.IsTimesheetSubmitted != null && DateTime.Now.Day >= 1 && DateTime.Now.Day < 5 && !ViewBag.IsTimesheetSubmitted)
+{
+	<div class="alert alert-info alert-notification">
+		<p class="text-center"><strong>Howdy!</strong> A friendly reminder to <a class="alert-link" asp-controller="Statistics" asp-area="">submit your @DateTime.Now.AddMonths(-1).Date.ToString("MMMM") timesheet</a> by @DateTime.Now.AddDays(5 - DateTime.Now.Day).Date.ToString("MM/dd/yyyy")</p>
+	</div>
+}
+@if (ViewBag.IsTimesheetSubmitted != null && DateTime.Now.Day == 5 && !ViewBag?.IsTimesheetSubmitted)
+{
+	<div class="alert alert-danger alert-notification">
+		<p class="text-center"><strong>Heads up!</strong> Today is the last day of <a class="alert-link" asp-controller="Statistics" asp-area="">submission of timesheet</a> for the month of @DateTime.Now.AddMonths(-1).Date.ToString("MMMM")!</p>
+	</div>
+}
+@if (ViewBag.HasKrPastDeadLine != null && ViewBag.HasKrPastDeadLine > 0)
+{
+	<div class="alert alert-danger alert-notification">
+		<p class="text-center"><strong>Kindly check! </strong><a class="alert-link" asp-controller="Objectives" asp-area="">@ViewBag.HasKrPastDeadLine Key Result(s)</a> has past its deadline@*for @(Math.Abs((ViewBag.HasOkrApproachingDeadLine.Deadline == null ? ExtensionMethods.QuarterStringToLastDay(DateTime.Now.ToQuarter()).DayOfYear : ViewBag.HasOkrApproachingDeadLine.Deadline.DayOfYear) - DateTime.Now.DayOfYear)) day(s)*@!</p>
+	</div>
+}
+@if (ViewBag.HasKrApproachingDeadLine != null && ViewBag.HasKrApproachingDeadLine > 0)
+{
+	<div class="alert alert-info alert-notification">
+		<p class="text-center"><strong>Kindly check! </strong><a class="alert-link" asp-controller="Objectives" asp-area="">@ViewBag.HasKrApproachingDeadLine Key Result(s)</a> is approaching its deadline.</p>
+	</div>
+}
